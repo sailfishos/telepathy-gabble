@@ -12,8 +12,9 @@ Source2:    mktests.sh
 Patch0:     nemo-tests-dir-fix.patch
 Patch1:     0001-Disable-parallel-build-for-extensions-directory.patch
 Patch2:	    wocky-disable-gtkdoc.patch
-Patch3:     0001-Change-default-keepalive-interval-to-2.5-minutes.patch
-Patch4:     0001-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
+Patch3:     wocky-mem-leak.patch
+Patch4:     0001-Change-default-keepalive-interval-to-2.5-minutes.patch
+Patch5:     0001-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
 Requires:   telepathy-mission-control
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -66,11 +67,12 @@ tests.xml for automated testing.
 %patch1 -p1
 cd lib/ext/wocky
 %patch2 -p1
+%patch3 -p1
 cd ../../..
 # 0001-Change-default-keepalive-interval-to-2.5-minutes.patch
-%patch3 -p1
-# 0001-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
 %patch4 -p1
+# 0001-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
+%patch5 -p1
 
 # >> setup
 %__cp $RPM_SOURCE_DIR/mktests.sh tests/
