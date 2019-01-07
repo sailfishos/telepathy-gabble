@@ -44,6 +44,15 @@ A Jabber/XMPP connection manager, that handles single and multi-user
 chats and voice calls.
 
 
+%package doc
+Summary:    Documentation for %{name}
+Group:      Documentation
+Requires:   %{name} = %{version}-%{release}
+
+%description doc
+Man pages and other documentation for %{name}.
+
+
 %package tests
 Summary:    Tests package for %{name}
 Group:      Development/Libraries
@@ -74,41 +83,33 @@ cd ../../..
 # 0001-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
 %patch5 -p1
 
-# >> setup
 %__cp $RPM_SOURCE_DIR/mktests.sh tests/
 %__cp $RPM_SOURCE_DIR/INSIGNIFICANT tests/
 %__chmod 0755 tests/mktests.sh
 %__chmod 0644 tests/INSIGNIFICANT
-# << setup
 
 %build
-# >> build pre
 cd lib/ext/wocky
 %autogen --no-configure --disable-gtk-doc
 cd ../../..
 %autogen --disable-submodules --no-configure
-# << build pre
 
 %reconfigure --disable-static \
     --enable-installed-tests
 
 make %{?jobs:-j%jobs}
 
-# >> build post
 tests/mktests.sh > tests/tests.xml
-# << build post
 
 %install
 rm -rf %{buildroot}
-# >> install pre
-# << install pre
 %make_install
 
-# >> install post
 install -m 0644 tests/tests.xml $RPM_BUILD_ROOT/opt/tests/telepathy-gabble/tests.xml
 install -m 0644 tests/INSIGNIFICANT $RPM_BUILD_ROOT/opt/tests/telepathy-gabble/INSIGNIFICANT
 install -m 0644 tests/README $RPM_BUILD_ROOT/opt/tests/telepathy-gabble/README
-# << install post
+
+install -m 0644 -t $RPM_BUILD_ROOT%{_docdir}/%{name}/ AUTHORS NEWS README
 
 %post -p /sbin/ldconfig
 
@@ -116,8 +117,7 @@ install -m 0644 tests/README $RPM_BUILD_ROOT/opt/tests/telepathy-gabble/README
 
 %files
 %defattr(-,root,root,-)
-# >> files
-%doc %{_datadir}/doc/%{name}/*.html
+%license COPYING
 %{_libexecdir}/%{name}
 %{_bindir}/telepathy-gabble-xmpp-console
 %{_libdir}/telepathy/gabble-0/lib/libgabble-plugins-*.so
@@ -128,11 +128,12 @@ install -m 0644 tests/README $RPM_BUILD_ROOT/opt/tests/telepathy-gabble/README
 %{_libdir}/telepathy/gabble-0/plugins/libgateways.so
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/telepathy/managers/*.manager
+
+%files doc
+%defattr(-,root,root,-)
+%doc %{_docdir}/%{name}/
 %{_mandir}/man8/%{name}.8.gz
-# << files
 
 %files tests
 %defattr(-,root,root,-)
 /opt/tests/%{name}/*
-# >> files tests
-# << files tests
