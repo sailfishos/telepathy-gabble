@@ -97,7 +97,7 @@ cd ../../..
 %reconfigure --disable-static \
     --enable-installed-tests
 
-make %{?jobs:-j%jobs}
+make %{_smp_mflags}
 
 tests/mktests.sh > tests/tests.xml
 
@@ -120,6 +120,9 @@ install -m 0644 -t $RPM_BUILD_ROOT%{_docdir}/%{name}/ AUTHORS NEWS README
 %license COPYING
 %{_libexecdir}/%{name}
 %{_bindir}/telepathy-gabble-xmpp-console
+%dir %{_libdir}/telepathy/gabble-0
+%dir %{_libdir}/telepathy/gabble-0/lib
+%dir %{_libdir}/telepathy/gabble-0/plugins
 %{_libdir}/telepathy/gabble-0/lib/libgabble-plugins-*.so
 %{_libdir}/telepathy/gabble-0/lib/libgabble-plugins.so
 %{_libdir}/telepathy/gabble-0/lib/libwocky-telepathy-gabble-*.so
