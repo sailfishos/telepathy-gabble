@@ -1,3 +1,3 @@
 [submodule "telepathy-gabble"]
 	path = telepathy-gabble
-	url = http://anongit.freedesktop.org/git/telepathy/telepathy-gabble.git
+	url = https://git.sailfishos.org/mirror/telepathy-gabble.git
