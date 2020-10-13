@@ -1,4 +1,4 @@
-From aaf8532e1512a5e9340a33c3f82c16e9dd8b34c6 Mon Sep 17 00:00:00 2001
+From b6d3b6ce1e2cafc5a290740c24c6f6a9d6d6b34e Mon Sep 17 00:00:00 2001
 From: Islam Amer <islam.amer@jollamobile.com>
 Date: Wed, 30 Apr 2014 00:30:43 +0300
 Subject: [PATCH] switch to using gireactor to work with new gi based
@@ -10,7 +10,7 @@ Subject: [PATCH] switch to using gireactor to work with new gi based
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/tests/twisted/servicetest.py b/tests/twisted/servicetest.py
-index 31c00f4..adb3030 100644
+index 31c00f476..adb303051 100644
 --- a/tests/twisted/servicetest.py
 +++ b/tests/twisted/servicetest.py
 @@ -3,9 +3,9 @@
@@ -26,7 +26,7 @@ index 31c00f4..adb3030 100644
  import time
  import os
 diff --git a/tests/twisted/test-helper.py b/tests/twisted/test-helper.py
-index 4909a96..5fb5e8e 100644
+index 4909a9611..5fb5e8e3e 100644
 --- a/tests/twisted/test-helper.py
 +++ b/tests/twisted/test-helper.py
 @@ -18,8 +18,8 @@ Once your'e done, the test code is written to a file called test.dump.
@@ -41,5 +41,5 @@ index 4909a96..5fb5e8e 100644
  from gabbletest import EventTest, run
  
 -- 
-1.9.0
+2.28.0
 

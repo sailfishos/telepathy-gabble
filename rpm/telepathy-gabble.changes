@@ -3,7 +3,7 @@
 - Add 0.17.3-fix-fdo-61792.patch adapted from master to fix a build failure
 - Add 0001-Disable-parallel-build-for-extensions-directory.patch to fix occasional build failures
 
-* Tue Apr  8 2013 Reto Zingg <reto.zingg@jollamobile.com> - 0.17.1
+* Mon Apr  8 2013 Reto Zingg <reto.zingg@jollamobile.com> - 0.17.1
 - add -tests package for automated testing
 
 * Thu Oct 04 2012 Marko Saukko <marko.saukko@jollamobile.com> - 0.17.1
