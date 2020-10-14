@@ -1,7 +1,8 @@
-diff -Naur telepathy-gabble-0.17.1/configure.ac telepathy-gabble-0.17.1-tests/configure.ac
---- telepathy-gabble-0.17.1/configure.ac	2012-09-11 13:51:59.000000000 +0000
-+++ telepathy-gabble-0.17.1-tests/configure.ac	2013-04-08 07:26:00.009864418 +0000
-@@ -184,7 +184,7 @@
+diff --git a/configure.ac b/configure.ac
+index 0b40754fd..0b979fbba 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -185,7 +185,7 @@ if test x$installed_tests = xyes; then
  fi
  AM_CONDITIONAL([ENABLE_INSTALLED_TESTS], [test "x$installed_tests" = xyes])
  
