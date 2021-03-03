@@ -1,30 +1,45 @@
-From 68e7fb2f17dd9348e586ef676d8138c4b849a1ce Mon Sep 17 00:00:00 2001
+From b38435284e6167bc653dfbe62310ce4640edeb69 Mon Sep 17 00:00:00 2001
 From: Roel Aaij <roel.aaij@nikhef.nl>
 Date: Fri, 26 Oct 2018 15:01:37 +0200
-Subject: [PATCH 1/2] openssl: fix build with openssl >= 1.1.0
+Subject: [PATCH] openssl: fix build with openssl >= 1.1.0
 
+Combines the following patches:
+
+1. openssl: fix build with openssl >= 1.1.0
+
+2. Remove accidental if if.
+
+With the further additional change:
+Author: David Llewellyn-Jones <david.llewellyn-jones@jolla.com>
+
+3. Clear flags rather than setting them on OpenSSL >= 1.1.0
+
+The X509_VERIFY_PARAM_set_flags() function actually ORs the flags, so
+the CRL check flags were never getting cleared. Consequently the CRL
+check would fail even when strict checking was turned off. This change
+clears the flags directly to avoid this.
 ---
- wocky/wocky-openssl-dh1024.c | 10 ++++++++++
- wocky/wocky-openssl-dh2048.c | 10 ++++++++++
- wocky/wocky-openssl-dh4096.c | 10 ++++++++++
- wocky/wocky-openssl-dh512.c  | 10 ++++++++++
- wocky/wocky-openssl.c        | 38 ++++++++++++++++++++++++++++++++----
+ wocky/wocky-openssl-dh1024.c             | 10 +++++++
+ wocky/wocky-openssl-dh2048.c             | 10 +++++++
+ wocky/wocky-openssl-dh4096.c             | 10 +++++++
+ wocky/wocky-openssl-dh512.c              | 10 +++++++
+ wocky/wocky-openssl.c                    | 38 +++++++++++++++++++++---
  5 files changed, 74 insertions(+), 4 deletions(-)
 
 diff --git a/wocky/wocky-openssl-dh1024.c b/wocky/wocky-openssl-dh1024.c
-index b77fb4c..bb50523 100644
+index b77fb4c..15b2793 100644
 --- a/wocky/wocky-openssl-dh1024.c
 +++ b/wocky/wocky-openssl-dh1024.c
 @@ -25,11 +25,21 @@ DH *get_dh1024(void)
  		0x02,
  		};
  	DH *dh;
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	int r = 0;
 +#endif
  
  	if ((dh=DH_new()) == NULL) return(NULL);
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	r = DH_set0_pqg(dh, BN_bin2bn(dh1024_p,sizeof(dh1024_p),NULL),
 +					NULL, BN_bin2bn(dh1024_g,sizeof(dh1024_g),NULL));
 +	if (!r)
@@ -38,19 +53,19 @@ index b77fb4c..bb50523 100644
  	return(dh);
  	}
 diff --git a/wocky/wocky-openssl-dh2048.c b/wocky/wocky-openssl-dh2048.c
-index c16deb7..d53ceda 100644
+index c16deb7..f51f5b8 100644
 --- a/wocky/wocky-openssl-dh2048.c
 +++ b/wocky/wocky-openssl-dh2048.c
 @@ -36,11 +36,21 @@ DH *get_dh2048(void)
  		0x02,
  		};
  	DH *dh;
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	int r = 0;
 +#endif
  
  	if ((dh=DH_new()) == NULL) return(NULL);
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	r = DH_set0_pqg(dh, BN_bin2bn(dh2048_p,sizeof(dh2048_p),NULL),
 +						NULL, BN_bin2bn(dh2048_g,sizeof(dh2048_g),NULL));
 +	if (!r)
@@ -63,46 +78,20 @@ index c16deb7..d53ceda 100644
 +#endif
  	return(dh);
  	}
-diff --git a/wocky/wocky-openssl-dh4096.c b/wocky/wocky-openssl-dh4096.c
-index 2854385..93fa7e5 100644
---- a/wocky/wocky-openssl-dh4096.c
-+++ b/wocky/wocky-openssl-dh4096.c
-@@ -57,11 +57,21 @@ DH *get_dh4096(void)
- 		0x02,
- 		};
- 	DH *dh;
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+	int r = 0;
-+#endif
- 
- 	if ((dh=DH_new()) == NULL) return(NULL);
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+	r = DH_set0_pqg(dh, BN_bin2bn(dh4096_p,sizeof(dh4096_p),NULL),
-+						NULL, BN_bin2bn(dh4096_g,sizeof(dh4096_g),NULL));
-+	if (!r)
-+		{ DH_free(dh); return(NULL); }
-+#else
- 	dh->p=BN_bin2bn(dh4096_p,sizeof(dh4096_p),NULL);
- 	dh->g=BN_bin2bn(dh4096_g,sizeof(dh4096_g),NULL);
- 	if ((dh->p == NULL) || (dh->g == NULL))
- 		{ DH_free(dh); return(NULL); }
-+#endif
- 	return(dh);
- 	}
 diff --git a/wocky/wocky-openssl-dh512.c b/wocky/wocky-openssl-dh512.c
-index 8e7a278..c2891cd 100644
+index 8e7a278..885fdc4 100644
 --- a/wocky/wocky-openssl-dh512.c
 +++ b/wocky/wocky-openssl-dh512.c
 @@ -20,11 +20,21 @@ DH *get_dh512(void)
  		0x02,
  		};
  	DH *dh;
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	int r = 0;
 +#endif
  
  	if ((dh=DH_new()) == NULL) return(NULL);
-+#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	r = DH_set0_pqg(dh, BN_bin2bn(dh512_p,sizeof(dh512_p),NULL),
 +					NULL, BN_bin2bn(dh512_g,sizeof(dh512_g),NULL));
 +	if (!r)
@@ -116,7 +105,7 @@ index 8e7a278..c2891cd 100644
  	return(dh);
  	}
 diff --git a/wocky/wocky-openssl.c b/wocky/wocky-openssl.c
-index 2201213..18f9981 100644
+index d1b5fd3..fa5f1d5 100644
 --- a/wocky/wocky-openssl.c
 +++ b/wocky/wocky-openssl.c
 @@ -885,7 +885,11 @@ check_peer_name (const char *target, X509 *cert)
@@ -169,7 +158,7 @@ index 2201213..18f9981 100644
          ext_str = ((convert->it != NULL) ?
                     ASN1_item_d2i (NULL, &p, len, ASN1_ITEM_ptr(convert->it)) :
                     convert->d2i (NULL, &p, len) );
-@@ -1120,13 +1133,22 @@ _cert_status (WockyTLSSession *session,
+@@ -1119,13 +1132,22 @@ _cert_status (WockyTLSSession *session,
            X509_STORE *store = SSL_CTX_get_cert_store(session->ctx);
            X509 *cert = SSL_get_peer_certificate (session->ssl);
            STACK_OF(X509) *chain = SSL_get_peer_cert_chain (session->ssl);
@@ -185,14 +174,14 @@ index 2201213..18f9981 100644
            new_flags &= ~(X509_V_FLAG_CRL_CHECK|X509_V_FLAG_CRL_CHECK_ALL);
  
 +#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+          X509_VERIFY_PARAM_set_flags(param, new_flags);
++          X509_VERIFY_PARAM_clear_flags(param, (X509_V_FLAG_CRL_CHECK|X509_V_FLAG_CRL_CHECK_ALL));
 +#else
            store->param->flags = new_flags;
 +#endif
            X509_STORE_CTX_init (xctx, store, cert, chain);
            X509_STORE_CTX_set_flags (xctx, new_flags);
  
-@@ -1136,7 +1158,11 @@ _cert_status (WockyTLSSession *session,
+@@ -1135,7 +1157,11 @@ _cert_status (WockyTLSSession *session,
                status = _cert_status (session, new_code, level, ssl_code);
              }
  
@@ -204,7 +193,7 @@ index 2201213..18f9981 100644
            X509_STORE_CTX_free (xctx);
            X509_free (cert);
  
-@@ -1675,12 +1701,16 @@ wocky_tls_session_init (WockyTLSSession *session)
+@@ -1674,12 +1700,16 @@ wocky_tls_session_init (WockyTLSSession *session)
  
    if G_UNLIKELY (g_once_init_enter (&initialised))
      {
@@ -221,93 +210,32 @@ index 2201213..18f9981 100644
  
        SSL_library_init ();
        SSL_load_error_strings ();
-
-From f84b25243bd03ceea17dc129493af6cd843b067e Mon Sep 17 00:00:00 2001
-From: Roel Aaij <roel.aaij@gmail.com>
-Date: Sun, 4 Nov 2018 08:54:58 +0100
-Subject: [PATCH 2/2] Remove accidental if if.
-
----
- wocky/wocky-openssl-dh1024.c | 4 ++--
- wocky/wocky-openssl-dh2048.c | 4 ++--
- wocky/wocky-openssl-dh4096.c | 4 ++--
- wocky/wocky-openssl-dh512.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/wocky/wocky-openssl-dh1024.c b/wocky/wocky-openssl-dh1024.c
-index bb50523..15b2793 100644
---- a/wocky/wocky-openssl-dh1024.c
-+++ b/wocky/wocky-openssl-dh1024.c
-@@ -25,12 +25,12 @@ DH *get_dh1024(void)
- 		0x02,
- 		};
- 	DH *dh;
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	int r = 0;
- #endif
- 
- 	if ((dh=DH_new()) == NULL) return(NULL);
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	r = DH_set0_pqg(dh, BN_bin2bn(dh1024_p,sizeof(dh1024_p),NULL),
- 					NULL, BN_bin2bn(dh1024_g,sizeof(dh1024_g),NULL));
- 	if (!r)
-diff --git a/wocky/wocky-openssl-dh2048.c b/wocky/wocky-openssl-dh2048.c
-index d53ceda..f51f5b8 100644
---- a/wocky/wocky-openssl-dh2048.c
-+++ b/wocky/wocky-openssl-dh2048.c
-@@ -36,12 +36,12 @@ DH *get_dh2048(void)
- 		0x02,
- 		};
- 	DH *dh;
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	int r = 0;
- #endif
- 
- 	if ((dh=DH_new()) == NULL) return(NULL);
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	r = DH_set0_pqg(dh, BN_bin2bn(dh2048_p,sizeof(dh2048_p),NULL),
- 						NULL, BN_bin2bn(dh2048_g,sizeof(dh2048_g),NULL));
- 	if (!r)
 diff --git a/wocky/wocky-openssl-dh4096.c b/wocky/wocky-openssl-dh4096.c
-index 93fa7e5..c72f903 100644
+index 2854385..c72f903 100644
 --- a/wocky/wocky-openssl-dh4096.c
-+++ b/wocky/wocky/wocky-openssl-dh4096.c
-@@ -57,12 +57,12 @@ DH *get_dh4096(void)
++++ b/wocky/wocky-openssl-dh4096.c
+@@ -57,11 +57,21 @@ DH *get_dh4096(void)
  		0x02,
  		};
  	DH *dh;
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	int r = 0;
- #endif
++	int r = 0;
++#endif
  
  	if ((dh=DH_new()) == NULL) return(NULL);
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	r = DH_set0_pqg(dh, BN_bin2bn(dh4096_p,sizeof(dh4096_p),NULL),
- 						NULL, BN_bin2bn(dh4096_g,sizeof(dh4096_g),NULL));
- 	if (!r)
-diff --git a/wocky/wocky-openssl-dh512.c b/wocky/wocky-openssl-dh512.c
-index c2891cd..885fdc4 100644
---- a/wocky/wocky-openssl-dh512.c
-+++ b/wocky/wocky-openssl-dh512.c
-@@ -20,12 +20,12 @@ DH *get_dh512(void)
- 		0x02,
- 		};
- 	DH *dh;
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	int r = 0;
- #endif
- 
- 	if ((dh=DH_new()) == NULL) return(NULL);
--#if if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
-+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
- 	r = DH_set0_pqg(dh, BN_bin2bn(dh512_p,sizeof(dh512_p),NULL),
- 					NULL, BN_bin2bn(dh512_g,sizeof(dh512_g),NULL));
- 	if (!r)
++	r = DH_set0_pqg(dh, BN_bin2bn(dh4096_p,sizeof(dh4096_p),NULL),
++						NULL, BN_bin2bn(dh4096_g,sizeof(dh4096_g),NULL));
++	if (!r)
++		{ DH_free(dh); return(NULL); }
++#else
+ 	dh->p=BN_bin2bn(dh4096_p,sizeof(dh4096_p),NULL);
+ 	dh->g=BN_bin2bn(dh4096_g,sizeof(dh4096_g),NULL);
+ 	if ((dh->p == NULL) || (dh->g == NULL))
+ 		{ DH_free(dh); return(NULL); }
++#endif
+ 	return(dh);
+ 	}
+-- 
+2.26.2
 
