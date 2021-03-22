@@ -1,7 +1,7 @@
 From d25b5f74758f0e13f08ef9aa5a061f5040299845 Mon Sep 17 00:00:00 2001
 From: Pekka Vuorela <pekka.vuorela@jolla.com>
 Date: Mon, 22 Mar 2021 15:51:15 +0200
-Subject: [PATCH 5/6] Port tools to python3
+Subject: [PATCH 5/7] Port tools to python3
 
 ---
  tools/c-constants-gen.py            |  6 ++---

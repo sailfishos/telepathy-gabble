@@ -1,7 +1,7 @@
 From db4530c886411b3925a566a8eb7d3494f6894429 Mon Sep 17 00:00:00 2001
 From: John Brooks <john.brooks@jollamobile.com>
 Date: Tue, 10 Dec 2013 19:45:53 -0700
-Subject: [PATCH 2/6] Change default keepalive-interval to 2.5 minutes
+Subject: [PATCH 2/7] Change default keepalive-interval to 2.5 minutes
 
 Waking up and sending packets at 30 second intervals is unreasonable for
 mobile, and seems more frequent than actually necessary. An interval of

@@ -1,7 +1,7 @@
 From d7a1817b963b54a82fd33fc6a750cc2785379011 Mon Sep 17 00:00:00 2001
 From: Pekka Vuorela <pekka.vuorela@jolla.com>
 Date: Mon, 22 Mar 2021 15:53:39 +0200
-Subject: [PATCH 1/6] Change test dir
+Subject: [PATCH 1/7] Change test dir
 
 ---
  configure.ac | 2 +-

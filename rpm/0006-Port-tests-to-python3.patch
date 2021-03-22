@@ -1,10 +1,10 @@
-From cad5cc81187e290f62fb62abc6553c0570058416 Mon Sep 17 00:00:00 2001
+From 3855763b9a9c91850fe56d880b427396743f0055 Mon Sep 17 00:00:00 2001
 From: Pekka Vuorela <pekka.vuorela@jolla.com>
 Date: Mon, 22 Mar 2021 15:51:58 +0200
-Subject: [PATCH 6/6] Port tests to python3
+Subject: [PATCH 6/7] Port tests to python3
 
 ---
- tests/twisted/addressing.py                   | 22 ++++----
+ tests/twisted/addressing.py                   | 22 +++----
  tests/twisted/bytestream.py                   |  4 +-
  tests/twisted/caps/advertise-contact-caps.py  |  2 +-
  tests/twisted/caps/advertise-legacy.py        |  8 +--
@@ -16,7 +16,7 @@ Subject: [PATCH 6/6] Port tests to python3
  tests/twisted/caps/jingle-caps.py             |  2 +-
  tests/twisted/caps/receive-jingle.py          | 30 +++++-----
  tests/twisted/caps/trust-thyself.py           |  8 +--
- tests/twisted/caps_helper.py                  | 30 +++++-----
+ tests/twisted/caps_helper.py                  | 36 ++++++------
  tests/twisted/client-types.py                 |  2 +-
  tests/twisted/cm/protocol.py                  |  6 +-
  .../connect/disco-error-from-bare-jid.py      |  2 +-
@@ -44,7 +44,7 @@ Subject: [PATCH 6/6] Port tests to python3
  .../test-send-file-to-unknown-contact.py      |  4 +-
  .../test-send-file-wait-to-provide.py         |  2 +-
  tests/twisted/file-transfer/test-uri.py       |  2 +-
- tests/twisted/gabbletest.py                   | 56 +++++++++----------
+ tests/twisted/gabbletest.py                   | 58 +++++++++----------
  tests/twisted/gateways.py                     |  2 +-
  .../jingle-share/file_transfer_helper.py      |  2 +-
  .../jingle-share/test-caps-file-transfer.py   |  4 +-
@@ -82,7 +82,7 @@ Subject: [PATCH 6/6] Port tests to python3
  tests/twisted/jingle/incoming-basics.py       |  6 +-
  .../jingle/incoming-call-stream-error.py      |  6 +-
  .../jingle/incoming-gmail-modern-jingle.py    |  4 +-
- tests/twisted/jingle/initial-audio-video.py   | 25 +++++----
+ tests/twisted/jingle/initial-audio-video.py   | 25 ++++----
  tests/twisted/jingle/jingletest2.py           |  8 +--
  tests/twisted/jingle/misuse.py                |  8 +--
  tests/twisted/jingle/outgoing-basics.py       |  6 +-
@@ -106,7 +106,7 @@ Subject: [PATCH 6/6] Port tests to python3
  tests/twisted/jingle/test-wait-for-caps.py    |  4 +-
  .../twisted/jingle/transport-info-parsing.py  |  4 +-
  tests/twisted/jingle/unknown-session.py       |  4 +-
- tests/twisted/mail-notification.py            | 16 +++---
+ tests/twisted/mail-notification.py            | 16 ++---
  tests/twisted/muc/banned.py                   |  2 +-
  tests/twisted/muc/chat-states.py              |  2 +-
  tests/twisted/muc/kicked.py                   |  2 +-
@@ -163,7 +163,7 @@ Subject: [PATCH 6/6] Port tests to python3
  tests/twisted/vcard/get-contact-info.py       | 12 ++--
  tests/twisted/vcard/overlapping-sets.py       |  6 +-
  tests/twisted/vcard/refresh-contact-info.py   | 12 ++--
- tests/twisted/vcard/set-contact-info.py       | 50 ++++++++---------
+ tests/twisted/vcard/set-contact-info.py       | 50 ++++++++--------
  tests/twisted/vcard/supported-fields.py       |  2 +-
  tests/twisted/vcard/test-alias-empty-vcard.py |  2 +-
  tests/twisted/vcard/test-alias-message.py     |  8 +--
@@ -173,7 +173,7 @@ Subject: [PATCH 6/6] Port tests to python3
  tests/twisted/vcard/test-avatar-tokens.py     |  2 +-
  tests/twisted/vcard/test-set-alias.py         | 12 ++--
  tests/twisted/vcard/update-get-failed.py      |  2 +-
- 169 files changed, 591 insertions(+), 590 deletions(-)
+ 169 files changed, 595 insertions(+), 594 deletions(-)
 
 diff --git a/tests/twisted/addressing.py b/tests/twisted/addressing.py
 index 9528e12cb..a0d50b55f 100644
@@ -542,7 +542,7 @@ index 34a145b62..12f7b2ac7 100644
      caps = conn.Capabilities.AdvertiseCapabilities(add, remove)
  
 diff --git a/tests/twisted/caps_helper.py b/tests/twisted/caps_helper.py
-index 11b05d9d8..e55b217a6 100644
+index 11b05d9d8..399108bb8 100644
 --- a/tests/twisted/caps_helper.py
 +++ b/tests/twisted/caps_helper.py
 @@ -161,12 +161,12 @@ def compute_caps_hash(identities, features, dataforms):
@@ -569,6 +569,15 @@ index 11b05d9d8..e55b217a6 100644
              field = x.addElement('field')
              field['var'] = var
  
+@@ -285,7 +285,7 @@ def disco_caps(q, stream, presence):
+     (identities, features, dataforms) = extract_disco_parts(event.stanza)
+ 
+     # Check if the hash matches the announced capabilities
+-    assertEquals(compute_caps_hash(identities, features, dataforms), ver)
++    assertEquals(compute_caps_hash(identities, features, dataforms), ver.encode())
+ 
+     return (event, features, dataforms)
+ 
 @@ -323,7 +323,7 @@ def send_presence(q, conn, stream, contact, caps, initial=True, show=None):
  
          q.expect('dbus-signal', signal='PresencesChanged',
@@ -578,7 +587,16 @@ index 11b05d9d8..e55b217a6 100644
  
          # no special capabilities
          assertEquals([(h, cs.CHANNEL_TYPE_TEXT, 3, 0)],
-@@ -356,20 +356,20 @@ if __name__ == '__main__':
+@@ -347,7 +347,7 @@ def send_disco_reply(stream, stanza, identities, features, dataforms={}):
+ 
+ if __name__ == '__main__':
+     # example from XEP-0115
+-    assertEquals('QgayPKawpkPSDYmwT/WM94uAlu0=',
++    assertEquals(b'QgayPKawpkPSDYmwT/WM94uAlu0=',
+         compute_caps_hash(['client/pc//Exodus 0.9.1'],
+             ["http://jabber.org/protocol/disco#info",
+              "http://jabber.org/protocol/disco#items",
+@@ -356,21 +356,21 @@ if __name__ == '__main__':
              {}))
  
      # another example from XEP-0115
@@ -609,7 +627,9 @@ index 11b05d9d8..e55b217a6 100644
 +              'software_version': ['0.11'],
              },
          }
-     assertEquals('q07IKJEyjvHSyhy//CH0CxmKi8w=',
+-    assertEquals('q07IKJEyjvHSyhy//CH0CxmKi8w=',
++    assertEquals(b'q07IKJEyjvHSyhy//CH0CxmKi8w=',
+         compute_caps_hash(identities, features, dataforms))
 diff --git a/tests/twisted/client-types.py b/tests/twisted/client-types.py
 index 2eaeebedb..c4ad5170f 100644
 --- a/tests/twisted/client-types.py
@@ -1089,7 +1109,7 @@ index b8b6dee0d..d6960c1b7 100644
  
  def assertNoURI(ft_channel):
 diff --git a/tests/twisted/gabbletest.py b/tests/twisted/gabbletest.py
-index e6b8baa0e..01474ca5f 100644
+index e6b8baa0e..34165f619 100644
 --- a/tests/twisted/gabbletest.py
 +++ b/tests/twisted/gabbletest.py
 @@ -75,7 +75,7 @@ def make_muc_presence(affiliation, role, muc_jid, alias, jid=None, photo=None):
@@ -1133,6 +1153,15 @@ index e6b8baa0e..01474ca5f 100644
  
          self.xmlstream.sendHeader()
  
+@@ -233,7 +233,7 @@ class XmppAuthenticator(GabbleAuthenticator):
+ 
+     def auth(self, auth):
+         assert (base64.b64decode(str(auth)) ==
+-            '\x00%s\x00%s' % (self.username, self.password))
++            ('\x00%s\x00%s' % (self.username, self.password)).encode())
+ 
+         success = domish.Element((ns.NS_XMPP_SASL, 'success'))
+         self.xmlstream.send(success)
 @@ -304,8 +304,8 @@ class StreamFactory(twisted.internet.protocol.Factory):
          self.streams = streams
          self.jids = jids
