@@ -1,3 +1,180 @@
+From cad5cc81187e290f62fb62abc6553c0570058416 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Mon, 22 Mar 2021 15:51:58 +0200
+Subject: [PATCH 6/6] Port tests to python3
+
+---
+ tests/twisted/addressing.py                   | 22 ++++----
+ tests/twisted/bytestream.py                   |  4 +-
+ tests/twisted/caps/advertise-contact-caps.py  |  2 +-
+ tests/twisted/caps/advertise-legacy.py        |  8 +--
+ tests/twisted/caps/caps-cache.py              |  2 +-
+ tests/twisted/caps/caps-persistent-cache.py   |  4 +-
+ tests/twisted/caps/compat-bundles.py          |  2 +-
+ tests/twisted/caps/from-bare-jid.py           |  2 +-
+ tests/twisted/caps/hashed-caps.py             | 18 +++---
+ tests/twisted/caps/jingle-caps.py             |  2 +-
+ tests/twisted/caps/receive-jingle.py          | 30 +++++-----
+ tests/twisted/caps/trust-thyself.py           |  8 +--
+ tests/twisted/caps_helper.py                  | 30 +++++-----
+ tests/twisted/client-types.py                 |  2 +-
+ tests/twisted/cm/protocol.py                  |  6 +-
+ .../connect/disco-error-from-bare-jid.py      |  2 +-
+ tests/twisted/connect/test-nonblocking-tls.py |  6 +-
+ tests/twisted/connect/test-success.py         |  2 +-
+ tests/twisted/connect/test-twice.py           |  4 +-
+ tests/twisted/connect/torture.py              |  6 +-
+ tests/twisted/console.py                      |  2 +-
+ tests/twisted/dataforms.py                    |  2 +-
+ .../file-transfer/file_transfer_helper.py     | 10 ++--
+ tests/twisted/file-transfer/ft-client-caps.py |  4 +-
+ tests/twisted/file-transfer/metadata.py       |  2 +-
+ .../file-transfer/test-caps-file-transfer.py  |  4 +-
+ .../file-transfer/test-ibb-too-early.py       |  2 +-
+ ...e-file-and-close-socket-while-receiving.py |  2 +-
+ .../test-receive-file-and-disconnect.py       |  2 +-
+ ...ile-and-sender-disconnect-while-pending.py |  4 +-
+ ...and-sender-disconnect-while-transfering.py |  2 +-
+ .../test-receive-file-decline.py              |  2 +-
+ .../file-transfer/test-receive-file.py        |  2 +-
+ .../test-send-file-and-cancel-immediately.py  |  2 +-
+ .../file-transfer/test-send-file-declined.py  |  4 +-
+ .../test-send-file-provide-immediately.py     |  4 +-
+ .../test-send-file-send-before-accept.py      |  2 +-
+ .../test-send-file-to-unknown-contact.py      |  4 +-
+ .../test-send-file-wait-to-provide.py         |  2 +-
+ tests/twisted/file-transfer/test-uri.py       |  2 +-
+ tests/twisted/gabbletest.py                   | 56 +++++++++----------
+ tests/twisted/gateways.py                     |  2 +-
+ .../jingle-share/file_transfer_helper.py      |  2 +-
+ .../jingle-share/test-caps-file-transfer.py   |  4 +-
+ tests/twisted/jingle-share/test-multift.py    |  8 +--
+ ...e-file-and-close-socket-while-receiving.py |  2 +-
+ .../test-receive-file-and-disconnect.py       |  2 +-
+ ...ile-and-sender-disconnect-while-pending.py |  4 +-
+ ...and-sender-disconnect-while-transfering.py |  2 +-
+ .../jingle-share/test-receive-file-decline.py |  4 +-
+ .../test-send-file-and-cancel-immediately.py  |  4 +-
+ .../test-send-file-send-before-accept.py      |  6 +-
+ .../test-send-file-wait-to-provide.py         |  2 +-
+ tests/twisted/jingle-share/test-send-file.py  |  2 +-
+ tests/twisted/jingle/accept-extra-stream.py   |  6 +-
+ tests/twisted/jingle/call-basics.py           | 24 ++++----
+ tests/twisted/jingle/call-codecoffer.py       | 18 +++---
+ .../jingle/call-content-adding-removal.py     |  6 +-
+ tests/twisted/jingle/call-dtmf-no-audio.py    |  6 +-
+ tests/twisted/jingle/call-dtmf.py             |  6 +-
+ tests/twisted/jingle/call-google-relay.py     |  8 +--
+ tests/twisted/jingle/call-hold-audio.py       | 10 ++--
+ tests/twisted/jingle/call-hold-av.py          | 14 ++---
+ tests/twisted/jingle/call-muc-cancel.py       |  2 +-
+ .../twisted/jingle/call-muc-re-re-request.py  |  8 +--
+ tests/twisted/jingle/call-muc.py              | 12 ++--
+ tests/twisted/jingle/call-state.py            |  4 +-
+ tests/twisted/jingle/call_helper.py           | 20 +++----
+ tests/twisted/jingle/callutils.py             |  2 +-
+ tests/twisted/jingle/decloak-peer.py          |  4 +-
+ tests/twisted/jingle/dtmf-no-audio.py         |  4 +-
+ tests/twisted/jingle/dtmf.py                  |  4 +-
+ tests/twisted/jingle/google-relay.py          | 14 ++---
+ tests/twisted/jingle/hold-audio.py            |  4 +-
+ tests/twisted/jingle/hold-av.py               |  4 +-
+ tests/twisted/jingle/incoming-basics.py       |  6 +-
+ .../jingle/incoming-call-stream-error.py      |  6 +-
+ .../jingle/incoming-gmail-modern-jingle.py    |  4 +-
+ tests/twisted/jingle/initial-audio-video.py   | 25 +++++----
+ tests/twisted/jingle/jingletest2.py           |  8 +--
+ tests/twisted/jingle/misuse.py                |  8 +--
+ tests/twisted/jingle/outgoing-basics.py       |  6 +-
+ tests/twisted/jingle/outgoing-ensure.py       | 10 ++--
+ tests/twisted/jingle/outgoing-many-streams.py | 10 ++--
+ tests/twisted/jingle/payload-types.py         |  4 +-
+ tests/twisted/jingle/preload-caps-crash.py    |  2 +-
+ tests/twisted/jingle/session-id-collision.py  |  4 +-
+ .../jingle/stream-errors-on-content-reject.py | 10 ++--
+ .../jingle/stream-errors-on-terminate.py      |  6 +-
+ tests/twisted/jingle/stream-handler-error.py  |  8 +--
+ tests/twisted/jingle/stun-server.py           | 14 ++---
+ .../jingle/test-content-adding-removal.py     |  4 +-
+ tests/twisted/jingle/test-content-complex.py  | 10 ++--
+ tests/twisted/jingle/test-description-info.py | 10 ++--
+ .../jingle/test-incoming-call-reject.py       |  8 +--
+ tests/twisted/jingle/test-incoming-iceudp.py  |  4 +-
+ .../jingle/test-outgoing-call-rejected.py     |  6 +-
+ tests/twisted/jingle/test-outgoing-iceudp.py  |  8 +--
+ .../jingle/test-wait-for-caps-incomplete.py   |  2 +-
+ tests/twisted/jingle/test-wait-for-caps.py    |  4 +-
+ .../twisted/jingle/transport-info-parsing.py  |  4 +-
+ tests/twisted/jingle/unknown-session.py       |  4 +-
+ tests/twisted/mail-notification.py            | 16 +++---
+ tests/twisted/muc/banned.py                   |  2 +-
+ tests/twisted/muc/chat-states.py              |  2 +-
+ tests/twisted/muc/kicked.py                   |  2 +-
+ tests/twisted/muc/only-text-when-needed.py    |  4 +-
+ tests/twisted/muc/password.py                 |  2 +-
+ tests/twisted/muc/room-config.py              |  4 +-
+ tests/twisted/muc/scrollback.py               |  6 +-
+ tests/twisted/muc/send-error.py               |  4 +-
+ tests/twisted/muc/test-muc-alias.py           |  6 +-
+ tests/twisted/muc/test-muc-invitation.py      |  2 +-
+ tests/twisted/muc/test-muc-ownership.py       | 14 ++---
+ tests/twisted/muc/test-muc.py                 | 20 +++----
+ tests/twisted/olpc/util.py                    |  2 +-
+ tests/twisted/plugin-channel-managers.py      |  2 +-
+ tests/twisted/power-save.py                   |  6 +-
+ tests/twisted/presence/error.py               |  2 +-
+ .../presence/initial-contact-presence.py      |  8 +--
+ tests/twisted/presence/initial-presence.py    |  2 +-
+ tests/twisted/presence/invisible_helper.py    | 20 +++----
+ tests/twisted/presence/invisible_xep_0126.py  |  6 +-
+ tests/twisted/presence/invisible_xep_0186.py  |  2 +-
+ tests/twisted/presence/plugins.py             |  6 +-
+ tests/twisted/presence/set-idempotence.py     | 24 ++++----
+ tests/twisted/presence/shared-status.py       |  6 +-
+ tests/twisted/pubsub.py                       | 12 ++--
+ tests/twisted/roster/test-google-roster.py    |  2 +-
+ .../roster/test-save-alias-to-roster.py       |  4 +-
+ tests/twisted/search/extended.py              | 20 +++----
+ tests/twisted/search/search_helper.py         |  2 +-
+ tests/twisted/search/unextended.py            | 10 ++--
+ tests/twisted/servicetest.py                  | 30 +++++-----
+ tests/twisted/sidecar-own-caps.py             |  2 +-
+ tests/twisted/sidecars.py                     |  4 +-
+ tests/twisted/test-helper.py                  |  8 +--
+ tests/twisted/test-location.py                | 26 ++++-----
+ tests/twisted/text/destroy.py                 |  2 +-
+ tests/twisted/text/facebook-own-message.py    |  4 +-
+ tests/twisted/text/initiate.py                |  2 +-
+ tests/twisted/text/receipts.py                | 10 ++--
+ tests/twisted/text/respawn.py                 |  2 +-
+ tests/twisted/text/test-chat-state.py         |  2 +-
+ tests/twisted/text/test-text.py               | 20 +++----
+ tests/twisted/tubes/accept-muc-stream-tube.py |  6 +-
+ .../twisted/tubes/accept-private-dbus-tube.py |  2 +-
+ .../tubes/accept-private-stream-tube.py       |  2 +-
+ .../tubes/close-muc-with-closed-tube.py       |  4 +-
+ .../tubes/create-invalid-tube-channels.py     |  2 +-
+ tests/twisted/tubes/offer-muc-dbus-tube.py    | 10 ++--
+ .../twisted/tubes/offer-private-dbus-tube.py  |  2 +-
+ .../tubes/offer-private-stream-tube.py        |  4 +-
+ .../tubes/request-invalid-dbus-tube.py        |  2 +-
+ .../twisted/tubes/test-get-available-tubes.py |  2 +-
+ tests/twisted/tubes/tubetestutil.py           |  2 +-
+ tests/twisted/vcard/get-contact-info.py       | 12 ++--
+ tests/twisted/vcard/overlapping-sets.py       |  6 +-
+ tests/twisted/vcard/refresh-contact-info.py   | 12 ++--
+ tests/twisted/vcard/set-contact-info.py       | 50 ++++++++---------
+ tests/twisted/vcard/supported-fields.py       |  2 +-
+ tests/twisted/vcard/test-alias-empty-vcard.py |  2 +-
+ tests/twisted/vcard/test-alias-message.py     |  8 +--
+ tests/twisted/vcard/test-alias-pep.py         |  2 +-
+ tests/twisted/vcard/test-alias.py             |  2 +-
+ tests/twisted/vcard/test-avatar-async.py      |  2 +-
+ tests/twisted/vcard/test-avatar-tokens.py     |  2 +-
+ tests/twisted/vcard/test-set-alias.py         | 12 ++--
+ tests/twisted/vcard/update-get-failed.py      |  2 +-
+ 169 files changed, 591 insertions(+), 590 deletions(-)
+
 diff --git a/tests/twisted/addressing.py b/tests/twisted/addressing.py
 index 9528e12cb..a0d50b55f 100644
 --- a/tests/twisted/addressing.py
@@ -3919,7 +4096,7 @@ index e25f35d96..b34c8d9cd 100644
      # Make sure Gabble's received the results.
      sync_stream(q, stream)
 diff --git a/tests/twisted/servicetest.py b/tests/twisted/servicetest.py
-index 31c00f476..acb679de1 100644
+index adb303051..acb679de1 100644
 --- a/tests/twisted/servicetest.py
 +++ b/tests/twisted/servicetest.py
 @@ -34,7 +34,7 @@ class DictionarySupersetOf (object):
@@ -4068,7 +4245,7 @@ index caeed8dda..6c866a7b0 100644
  def test(q, bus, conn, stream):
      # Request a sidecar thate we support before we're connected; it should just
 diff --git a/tests/twisted/test-helper.py b/tests/twisted/test-helper.py
-index 4909a9611..0ae7fa18d 100644
+index 5fb5e8e3e..0ae7fa18d 100644
 --- a/tests/twisted/test-helper.py
 +++ b/tests/twisted/test-helper.py
 @@ -40,12 +40,12 @@ class TestShell:
@@ -4893,3 +5070,6 @@ index 225b70ecf..bffa518ce 100644
      stream.send(reply)
  
      event = q.expect('dbus-error', method='SetAvatar', name=cs.NOT_AVAILABLE)
+-- 
+2.30.2
+

@@ -7,15 +7,15 @@ URL:        https://telepathy.freedesktop.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source1:    mktests.sh
 Source2:    INSIGNIFICANT
-Patch0:     nemo-tests-dir-fix.patch
-Patch1:     0001-Change-default-keepalive-interval-to-2.5-minutes.patch
-Patch2:     0002-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
-Patch3:     0001-xmpp-console-Explicitly-state-python-in-the-shebang.patch
-Patch4:     telepathy-gabble-0.18.4-python3.patch
-Patch5:     0001-convert-tests-to-python3.patch
-Patch6:     wocky-Make-GTK-Docs-optional.patch
-Patch7:     wocky-fix-mem-leak.patch
-Patch8:     wocky-openssl-1.1-compat.patch
+Patch1:     0001-Change-test-dir.patch
+Patch2:     0002-Change-default-keepalive-interval-to-2.5-minutes.patch
+Patch3:     0003-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
+Patch4:     0004-xmpp-console-Explicitly-state-python-in-the-shebang.patch
+Patch5:     0005-Port-tools-to-python3.patch
+Patch6:     0006-Port-tests-to-python3.patch
+Patch20:    wocky-Make-GTK-Docs-optional.patch
+Patch21:    wocky-fix-mem-leak.patch
+Patch22:    wocky-openssl-1.1-compat.patch
 BuildRequires:  pkgconfig(dbus-1) >= 1.1.0
 BuildRequires:  pkgconfig(dbus-glib-1) >= 0.82
 BuildRequires:  pkgconfig(telepathy-glib) >= 0.19.9
@@ -67,27 +67,21 @@ The %{name}-tests package contains tests and tests.xml for automated testing.
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 
-# nemo-tests-dir-fix.patch
-%patch0 -p1
-# 0001-Change-default-keepalive-interval-to-2.5-minutes.patch
 %patch1 -p1
-# 0002-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
 %patch2 -p1
-# 0001-xmpp-console-Explicitly-state-python-in-the-shebang.patch
 %patch3 -p1
-# telepathy-gabble-0.18.4-python3.patch
 %patch4 -p1
-# 0001-convert-tests-to-python3.patch
 %patch5 -p1
+%patch6 -p1
 
 %__cp %{SOURCE1} tests/
 %__cp %{SOURCE2} tests/
 
 cd lib/ext/wocky
-%patch6 -p1
-%patch7 -p1
+%patch20 -p1
+%patch21 -p1
 # wocky-openssl-1.1-compat.patch  (for openssl compile errors)
-%patch8 -p1
+%patch22 -p1
 
 %build
 %autogen --disable-submodules --no-configure
