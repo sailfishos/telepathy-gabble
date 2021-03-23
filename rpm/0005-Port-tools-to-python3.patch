@@ -1,6 +1,28 @@
-diff -up telepathy-gabble-0.18.4/tools/c-constants-gen.py.py3 telepathy-gabble-0.18.4/tools/c-constants-gen.py
---- telepathy-gabble-0.18.4/tools/c-constants-gen.py.py3	2016-11-15 04:06:40.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/c-constants-gen.py	2019-12-20 10:28:02.467810478 -0500
+From d25b5f74758f0e13f08ef9aa5a061f5040299845 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Mon, 22 Mar 2021 15:51:15 +0200
+Subject: [PATCH 5/7] Port tools to python3
+
+---
+ tools/c-constants-gen.py            |  6 ++---
+ tools/glib-client-gen.py            |  6 ++---
+ tools/glib-client-marshaller-gen.py | 22 +++++++++----------
+ tools/glib-errors-str-gen.py        |  6 ++---
+ tools/glib-ginterface-gen.py        | 20 ++++++++---------
+ tools/glib-gtypes-generator.py      |  6 ++---
+ tools/glib-interfaces-gen.py        |  6 ++---
+ tools/gobject-foo.py                |  2 +-
+ tools/libglibcodegen.py             |  5 ++---
+ tools/libtpcodegen.py               |  5 ++++-
+ tools/make-release-mail.py          | 10 ++++-----
+ tools/manager-file.py               | 34 ++++++++++++++---------------
+ tools/xincludator.py                | 12 +++++-----
+ 13 files changed, 71 insertions(+), 69 deletions(-)
+
+diff --git a/tools/c-constants-gen.py b/tools/c-constants-gen.py
+index c7a93d371..7dbe3517f 100644
+--- a/tools/c-constants-gen.py
++++ b/tools/c-constants-gen.py
 @@ -12,7 +12,7 @@ class Generator(object):
          self.prefix = prefix + '_'
          self.spec = get_by_path(dom, "spec")[0]
@@ -23,9 +45,10 @@ diff -up telepathy-gabble-0.18.4/tools/c-constants-gen.py.py3 telepathy-gabble-0
  
      # Header
      def do_header(self):
-diff -up telepathy-gabble-0.18.4/tools/glib-client-gen.py.py3 telepathy-gabble-0.18.4/tools/glib-client-gen.py
---- telepathy-gabble-0.18.4/tools/glib-client-gen.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-client-gen.py	2019-12-20 10:27:54.390926615 -0500
+diff --git a/tools/glib-client-gen.py b/tools/glib-client-gen.py
+index f8465a62b..28eab2ec1 100644
+--- a/tools/glib-client-gen.py
++++ b/tools/glib-client-gen.py
 @@ -74,17 +74,17 @@ class Generator(object):
          self.guard = opts.get('--guard', None)
  
@@ -47,9 +70,10 @@ diff -up telepathy-gabble-0.18.4/tools/glib-client-gen.py.py3 telepathy-gabble-0
              s = s.encode('utf-8')
          self.__docs.append(s)
  
-diff -up telepathy-gabble-0.18.4/tools/glib-client-marshaller-gen.py.py3 telepathy-gabble-0.18.4/tools/glib-client-marshaller-gen.py
---- telepathy-gabble-0.18.4/tools/glib-client-marshaller-gen.py.py3	2016-11-15 04:06:40.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-client-marshaller-gen.py	2019-12-20 10:28:02.468810464 -0500
+diff --git a/tools/glib-client-marshaller-gen.py b/tools/glib-client-marshaller-gen.py
+index cb27d638a..ac61a1928 100644
+--- a/tools/glib-client-marshaller-gen.py
++++ b/tools/glib-client-marshaller-gen.py
 @@ -31,23 +31,23 @@ class Generator(object):
          for signal in signals:
              self.do_signal(signal)
@@ -85,9 +109,10 @@ diff -up telepathy-gabble-0.18.4/tools/glib-client-marshaller-gen.py.py3 telepat
  
  
  def types_to_gtypes(types):
-diff -up telepathy-gabble-0.18.4/tools/glib-errors-str-gen.py.py3 telepathy-gabble-0.18.4/tools/glib-errors-str-gen.py
---- telepathy-gabble-0.18.4/tools/glib-errors-str-gen.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-errors-str-gen.py	2019-12-20 10:27:54.390926615 -0500
+diff --git a/tools/glib-errors-str-gen.py b/tools/glib-errors-str-gen.py
+index b2cf520bd..b78836f9e 100644
+--- a/tools/glib-errors-str-gen.py
++++ b/tools/glib-errors-str-gen.py
 @@ -17,17 +17,17 @@ class Generator(object):
          self.__docs = []
  
@@ -109,9 +134,10 @@ diff -up telepathy-gabble-0.18.4/tools/glib-errors-str-gen.py.py3 telepathy-gabb
              s = s.encode('utf-8')
          self.__docs.append(s)
  
-diff -up telepathy-gabble-0.18.4/tools/glib-ginterface-gen.py.py3 telepathy-gabble-0.18.4/tools/glib-ginterface-gen.py
---- telepathy-gabble-0.18.4/tools/glib-ginterface-gen.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-ginterface-gen.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/glib-ginterface-gen.py b/tools/glib-ginterface-gen.py
+index 6fec0d3c4..42a4a1a62 100644
+--- a/tools/glib-ginterface-gen.py
++++ b/tools/glib-ginterface-gen.py
 @@ -27,7 +27,7 @@ import os.path
  import xml.dom.minidom
  
@@ -173,9 +199,10 @@ diff -up telepathy-gabble-0.18.4/tools/glib-ginterface-gen.py.py3 telepathy-gabb
      sys.exit(1)
  
  
-diff -up telepathy-gabble-0.18.4/tools/glib-gtypes-generator.py.py3 telepathy-gabble-0.18.4/tools/glib-gtypes-generator.py
---- telepathy-gabble-0.18.4/tools/glib-gtypes-generator.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-gtypes-generator.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/glib-gtypes-generator.py b/tools/glib-gtypes-generator.py
+index 21dfc6aa7..25bc05f71 100644
+--- a/tools/glib-gtypes-generator.py
++++ b/tools/glib-gtypes-generator.py
 @@ -68,13 +68,13 @@ class GTypesGenerator(object):
          self.need_other_arrays = {}
  
@@ -193,9 +220,10 @@ diff -up telepathy-gabble-0.18.4/tools/glib-gtypes-generator.py.py3 telepathy-ga
  
      def do_mapping_header(self, mapping):
          members = mapping.getElementsByTagNameNS(NS_TP, 'member')
-diff -up telepathy-gabble-0.18.4/tools/glib-interfaces-gen.py.py3 telepathy-gabble-0.18.4/tools/glib-interfaces-gen.py
---- telepathy-gabble-0.18.4/tools/glib-interfaces-gen.py.py3	2019-12-20 10:28:22.933516203 -0500
-+++ telepathy-gabble-0.18.4/tools/glib-interfaces-gen.py	2019-12-20 10:28:40.075269728 -0500
+diff --git a/tools/glib-interfaces-gen.py b/tools/glib-interfaces-gen.py
+index 410762cde..43eab2ffc 100644
+--- a/tools/glib-interfaces-gen.py
++++ b/tools/glib-interfaces-gen.py
 @@ -24,13 +24,13 @@ class Generator(object):
          self.spec = get_by_path(dom, "spec")[0]
  
@@ -213,18 +241,20 @@ diff -up telepathy-gabble-0.18.4/tools/glib-interfaces-gen.py.py3 telepathy-gabb
  
      def __call__(self):
          for f in self.h, self.c:
-diff -up telepathy-gabble-0.18.4/tools/gobject-foo.py.py3 telepathy-gabble-0.18.4/tools/gobject-foo.py
---- telepathy-gabble-0.18.4/tools/gobject-foo.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/gobject-foo.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/gobject-foo.py b/tools/gobject-foo.py
+index 002a290ba..a2abd7667 100644
+--- a/tools/gobject-foo.py
++++ b/tools/gobject-foo.py
 @@ -87,4 +87,4 @@ if __name__ == '__main__':
  
      head, tail = argv
  
 -    print '\n'.join(gobject_header(head, tail, as_interface=as_interface))
 +    print('\n'.join(gobject_header(head, tail, as_interface=as_interface)))
-diff -up telepathy-gabble-0.18.4/tools/libglibcodegen.py.py3 telepathy-gabble-0.18.4/tools/libglibcodegen.py
---- telepathy-gabble-0.18.4/tools/libglibcodegen.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/libglibcodegen.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/libglibcodegen.py b/tools/libglibcodegen.py
+index 6a9d21485..578960997 100644
+--- a/tools/libglibcodegen.py
++++ b/tools/libglibcodegen.py
 @@ -23,7 +23,6 @@ please make any changes there.
  
  from libtpcodegen import NS_TP, \
@@ -248,9 +278,10 @@ diff -up telepathy-gabble-0.18.4/tools/libglibcodegen.py.py3 telepathy-gabble-0.
      # we just don't know ..
 -    raise Exception, "don't know the GType for " + s
 +    raise Exception("don't know the GType for " + s)
-diff -up telepathy-gabble-0.18.4/tools/libtpcodegen.py.py3 telepathy-gabble-0.18.4/tools/libtpcodegen.py
---- telepathy-gabble-0.18.4/tools/libtpcodegen.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/libtpcodegen.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/libtpcodegen.py b/tools/libtpcodegen.py
+index 7e9eb9a50..8e052c28d 100644
+--- a/tools/libtpcodegen.py
++++ b/tools/libtpcodegen.py
 @@ -167,7 +167,10 @@ class _SignatureIter:
      def __init__(self, string):
          self.remaining = string
@@ -263,10 +294,11 @@ diff -up telepathy-gabble-0.18.4/tools/libtpcodegen.py.py3 telepathy-gabble-0.18
          if self.remaining == '':
              raise StopIteration
  
-diff -up telepathy-gabble-0.18.4/tools/make-release-mail.py.py3 telepathy-gabble-0.18.4/tools/make-release-mail.py
---- telepathy-gabble-0.18.4/tools/make-release-mail.py.py3	2016-07-02 04:28:17.000000000 -0400
-+++ telepathy-gabble-0.18.4/tools/make-release-mail.py	2019-12-20 10:27:54.391926600 -0500
-@@ -28,8 +28,8 @@ def extract_description(package, version
+diff --git a/tools/make-release-mail.py b/tools/make-release-mail.py
+index b03ebd256..33438382b 100644
+--- a/tools/make-release-mail.py
++++ b/tools/make-release-mail.py
+@@ -28,8 +28,8 @@ def extract_description(package, version, news_path):
                  break
  
          # Skip the ====== line, and the first blank line
@@ -277,7 +309,7 @@ diff -up telepathy-gabble-0.18.4/tools/make-release-mail.py.py3 telepathy-gabble
  
          got_release_name = False
  
-@@ -59,7 +59,7 @@ GIT_URL = 'http://cgit.freedesktop.org/t
+@@ -59,7 +59,7 @@ GIT_URL = 'http://cgit.freedesktop.org/telepathy'
  def main(package, version, news_path):
      release_name, details = extract_description(package, version, news_path)
  
@@ -303,9 +335,10 @@ diff -up telepathy-gabble-0.18.4/tools/make-release-mail.py.py3 telepathy-gabble
          sys.stderr.write(
              'Usage: %s package-name package.version.number path/to/NEWS\n' %
              sys.argv[0])
-diff -up telepathy-gabble-0.18.4/tools/manager-file.py.py3 telepathy-gabble-0.18.4/tools/manager-file.py
---- telepathy-gabble-0.18.4/tools/manager-file.py.py3	2016-07-02 04:28:17.000000000 -0400
-+++ telepathy-gabble-0.18.4/tools/manager-file.py	2019-12-20 10:27:54.391926600 -0500
+diff --git a/tools/manager-file.py b/tools/manager-file.py
+index e1b51a616..73778ffc2 100644
+--- a/tools/manager-file.py
++++ b/tools/manager-file.py
 @@ -87,18 +87,18 @@ gflags = {
  
  def write_manager(f, manager, protos):
@@ -353,7 +386,7 @@ diff -up telepathy-gabble-0.18.4/tools/manager-file.py.py3 telepathy-gabble-0.18
          dtype = info['dtype']
          flags = info.get('flags', '').split()
          struct_field = info.get('struct_field', param.replace('-', '_'))
-@@ -146,7 +146,7 @@ def write_c_params(f, manager, proto, st
+@@ -146,7 +146,7 @@ def write_c_params(f, manager, proto, struct, params):
          else:
              struct_offset = 'G_STRUCT_OFFSET (%s, %s)' % (struct, struct_field)
  
@@ -362,7 +395,7 @@ diff -up telepathy-gabble-0.18.4/tools/manager-file.py.py3 telepathy-gabble-0.18
      %s,
      %s, /* default */
      %s, /* struct offset */
-@@ -154,14 +154,14 @@ def write_c_params(f, manager, proto, st
+@@ -154,14 +154,14 @@ def write_c_params(f, manager, proto, struct, params):
      %s, /* filter data */
      %s /* setter data */ },''' %
                  (c_string(param), c_string(dtype), gtypes[dtype], flags,
@@ -381,9 +414,10 @@ diff -up telepathy-gabble-0.18.4/tools/manager-file.py.py3 telepathy-gabble-0.18
  
      filename = '%s/%s.manager' % (sys.argv[2], environment['MANAGER'])
      try:
-diff -up telepathy-gabble-0.18.4/tools/xincludator.py.py3 telepathy-gabble-0.18.4/tools/xincludator.py
---- telepathy-gabble-0.18.4/tools/xincludator.py.py3	2016-11-15 04:03:24.000000000 -0500
-+++ telepathy-gabble-0.18.4/tools/xincludator.py	2019-12-20 10:27:54.392926586 -0500
+diff --git a/tools/xincludator.py b/tools/xincludator.py
+index 63e106ace..972d884ae 100644
+--- a/tools/xincludator.py
++++ b/tools/xincludator.py
 @@ -1,17 +1,17 @@
  #!/usr/bin/python
  
@@ -414,3 +448,6 @@ diff -up telepathy-gabble-0.18.4/tools/xincludator.py.py3 telepathy-gabble-0.18.
 -    stdout.write('\n')
 +    sys.stdout.write(xml)
 +    sys.stdout.write('\n')
+-- 
+2.30.2
+
