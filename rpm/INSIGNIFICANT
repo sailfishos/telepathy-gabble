@@ -1,2 +1,0 @@
-jingle-share/test-send-file-send-before-accept.py - this often runs into a time out (https://bugs.freedesktop.org/show_bug.cgi?id=49595)
-client-types.py - this fails from time to time (https://bugs.freedesktop.org/show_bug.cgi?id=37381)
