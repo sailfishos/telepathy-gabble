@@ -1,3 +1,13 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Raine Makelainen <raine.makelainen@jolla.com>
+Date: Thu, 27 Jan 2022 09:54:12 +0200
+Subject: [PATCH] [wocky] Fix mem leak
+
+Signed-off-by: Raine Makelainen <raine.makelainen@jolla.com>
+---
+ wocky/wocky-xmpp-reader.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
 diff --git a/wocky/wocky-xmpp-reader.c b/wocky/wocky-xmpp-reader.c
 index f0eaa92..6a05c5b 100644
 --- a/wocky/wocky-xmpp-reader.c
@@ -11,3 +21,6 @@ index f0eaa92..6a05c5b 100644
    G_OBJECT_CLASS (wocky_xmpp_reader_parent_class)->finalize (object);
  }
  
+-- 
+2.34.1
+
