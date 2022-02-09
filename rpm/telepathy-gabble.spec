@@ -132,4 +132,4 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 
 %files tests
 %defattr(-,root,root,-)
-/opt/tests/%{name}/*
+/opt/tests/%{name}
