@@ -31,7 +31,7 @@ BuildRequires:  pkgconfig(nice) >= 0.0.11
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(libiphb) >= 0.61.31
 BuildRequires:  ca-certificates
-BuildRequires:  python3-devel
+BuildRequires:  python3-base
 BuildRequires:  python3-twisted
 BuildRequires:  dbus-python3
 Requires:       telepathy-mission-control >= 5.5.0
@@ -62,7 +62,6 @@ Requires:   python3-gobject
 
 %description tests
 The %{name}-tests package contains tests and tests.xml for automated testing.
-
 
 %prep
 %setup -q -n %{name}-%{version}/%{name}
@@ -110,8 +109,8 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 
 %files
 %defattr(-,root,root,-)
+%exclude %{_bindir}/%{name}-xmpp-console
 %license COPYING
-%{_bindir}/%{name}-xmpp-console
 %{_libexecdir}/%{name}
 %dir %{_libdir}/telepathy/gabble-0
 %dir %{_libdir}/telepathy/gabble-0/lib
