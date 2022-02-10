@@ -5,8 +5,6 @@ Release:    1
 License:    LGPLv2+
 URL:        https://telepathy.freedesktop.org/
 Source0:    %{name}-%{version}.tar.bz2
-Source1:    mktests.sh
-Source2:    INSIGNIFICANT
 Patch1:     0001-Change-test-dir.patch
 Patch2:     0002-Change-default-keepalive-interval-to-2.5-minutes.patch
 Patch3:     0003-switch-to-using-gireactor-to-work-with-new-gi-based-.patch
@@ -14,6 +12,7 @@ Patch4:     0004-xmpp-console-Explicitly-state-python-in-the-shebang.patch
 Patch5:     0005-Port-tools-to-python3.patch
 Patch6:     0006-Port-tests-to-python3.patch
 Patch7:     0007-Switch-readlink-parameter-from-e-to-f.patch
+Patch8:     0008-Add-make-tests-script.patch
 Patch20:    wocky-Make-GTK-Docs-optional.patch
 Patch21:    wocky-fix-mem-leak.patch
 Patch22:    wocky-openssl-1.1-compat.patch
@@ -32,7 +31,7 @@ BuildRequires:  pkgconfig(nice) >= 0.0.11
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(libiphb) >= 0.61.31
 BuildRequires:  ca-certificates
-BuildRequires:  python3-devel
+BuildRequires:  python3-base
 BuildRequires:  python3-twisted
 BuildRequires:  dbus-python3
 Requires:       telepathy-mission-control >= 5.5.0
@@ -64,7 +63,6 @@ Requires:   python3-gobject
 %description tests
 The %{name}-tests package contains tests and tests.xml for automated testing.
 
-
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 
@@ -75,9 +73,7 @@ The %{name}-tests package contains tests and tests.xml for automated testing.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-
-%__cp %{SOURCE1} tests/
-%__cp %{SOURCE2} tests/
+%patch8 -p1
 
 cd lib/ext/wocky
 %patch20 -p1
@@ -113,8 +109,8 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 
 %files
 %defattr(-,root,root,-)
+%exclude %{_bindir}/%{name}-xmpp-console
 %license COPYING
-%{_bindir}/%{name}-xmpp-console
 %{_libexecdir}/%{name}
 %dir %{_libdir}/telepathy/gabble-0
 %dir %{_libdir}/telepathy/gabble-0/lib
@@ -136,4 +132,4 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 
 %files tests
 %defattr(-,root,root,-)
-/opt/tests/%{name}/*
+/opt/tests/%{name}
