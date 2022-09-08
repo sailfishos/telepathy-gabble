@@ -13,6 +13,7 @@ Patch5:     0005-Port-tools-to-python3.patch
 Patch6:     0006-Port-tests-to-python3.patch
 Patch7:     0007-Switch-readlink-parameter-from-e-to-f.patch
 Patch8:     0008-Add-make-tests-script.patch
+Patch9:     0009-docs-Ensure-build-reproducibility.patch
 Patch20:    wocky-Make-GTK-Docs-optional.patch
 Patch21:    wocky-fix-mem-leak.patch
 Patch22:    wocky-openssl-1.1-compat.patch
@@ -74,6 +75,7 @@ The %{name}-tests package contains tests and tests.xml for automated testing.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 cd lib/ext/wocky
 %patch20 -p1
