@@ -3,7 +3,7 @@ Summary:    A Jabber/XMPP connection manager
 Version:    0.18.4
 Release:    1
 License:    LGPLv2+
-URL:        https://telepathy.freedesktop.org/
+URL:        https://github.com/sailfishos/telepathy-gabble
 Source0:    %{name}-%{version}.tar.bz2
 Patch1:     0001-Change-test-dir.patch
 Patch2:     0002-Change-default-keepalive-interval-to-2.5-minutes.patch
@@ -110,7 +110,6 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %exclude %{_bindir}/%{name}-xmpp-console
 %license COPYING
 %{_libexecdir}/%{name}
@@ -127,11 +126,9 @@ install -m 0644 tests/README %{buildroot}/opt/tests/%{name}/README
 %{_datadir}/telepathy/managers/*.manager
 
 %files doc
-%defattr(-,root,root,-)
 %doc AUTHORS NEWS README
 %{_docdir}/%{name}/
 %{_mandir}/man8/%{name}.8.gz
 
 %files tests
-%defattr(-,root,root,-)
 /opt/tests/%{name}
