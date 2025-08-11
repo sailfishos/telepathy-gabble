@@ -27,7 +27,6 @@ BuildRequires:  pkgconfig(gio-2.0) >= 2.44
 BuildRequires:  pkgconfig(gmodule-2.0) >= 2.32
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(sqlite3)
-BuildRequires:  pkgconfig(libsoup-2.4) >= 2.42
 BuildRequires:  pkgconfig(nice) >= 0.0.11
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(libiphb) >= 0.61.31
@@ -94,7 +93,8 @@ cd ../../..
   --disable-gtk-doc \
   --enable-installed-tests \
   --enable-is-a-phone \
-  --with-tls=openssl
+  --with-tls=openssl \
+  --disable-google-relay
 
 %make_build
 
