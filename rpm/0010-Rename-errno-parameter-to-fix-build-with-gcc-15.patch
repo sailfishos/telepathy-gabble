@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@jolla.com>
+Date: Sat, 4 Oct 2025 17:24:02 +0300
+Subject: [PATCH] Rename errno parameter to fix build with gcc 15
+
+Gcc 15 gets confused with errno as parameter name.
+---
+ src/media-channel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/media-channel.c b/src/media-channel.c
+index c4ab89e37fdce8642727087e6fa87a8587c094d4..109328a45bd51f24ddedd666dbdf540eee2a87b4 100644
+--- a/src/media-channel.c
++++ b/src/media-channel.c
+@@ -2964,7 +2964,7 @@ gabble_media_channel_ready (TpSvcMediaSessionHandler *iface,
+ 
+ static void
+ gabble_media_channel_error (TpSvcMediaSessionHandler *iface,
+-                            guint errno,
++                            unsigned int err_no,
+                             const gchar *message,
+                             DBusGMethodInvocation *context)
+ {
+@@ -2995,7 +2995,7 @@ gabble_media_channel_error (TpSvcMediaSessionHandler *iface,
+     }
+ 
+   DEBUG ("Media.SessionHandler::Error called, error %u (%s) -- "
+-      "emitting error on each stream", errno, message);
++      "emitting error on each stream", err_no, message);
+ 
+   g_object_get (priv->session, "state", &state, NULL);
+ 
+@@ -3024,7 +3024,7 @@ gabble_media_channel_error (TpSvcMediaSessionHandler *iface,
+     {
+       GabbleMediaStream *stream = g_ptr_array_index (tmp, i);
+ 
+-      gabble_media_stream_error (stream, errno, message, NULL);
++      gabble_media_stream_error (stream, err_no, message, NULL);
+     }
+ 
+   g_ptr_array_unref (tmp);

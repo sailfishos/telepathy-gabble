@@ -14,9 +14,11 @@ Patch6:     0006-Port-tests-to-python3.patch
 Patch7:     0007-Switch-readlink-parameter-from-e-to-f.patch
 Patch8:     0008-Add-make-tests-script.patch
 Patch9:     0009-docs-Ensure-build-reproducibility.patch
+Patch10:    0010-Rename-errno-parameter-to-fix-build-with-gcc-15.patch
 Patch20:    wocky-Make-GTK-Docs-optional.patch
 Patch21:    wocky-fix-mem-leak.patch
 Patch22:    wocky-openssl-1.1-compat.patch
+Patch23:    wocky-Fix-build-with-gcc-15.patch
 BuildRequires:  pkgconfig(dbus-1) >= 1.1.0
 BuildRequires:  pkgconfig(dbus-glib-1) >= 0.82
 BuildRequires:  pkgconfig(telepathy-glib) >= 0.19.9
