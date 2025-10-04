@@ -66,21 +66,10 @@ The %{name}-tests package contains tests and tests.xml for automated testing.
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
+%autopatch -m 1 -M 19 -p1
 
 cd lib/ext/wocky
-%patch20 -p1
-%patch21 -p1
-# wocky-openssl-1.1-compat.patch  (for openssl compile errors)
-%patch22 -p1
+%autopatch -m 20 -p1
 
 %build
 %autogen --disable-submodules --no-configure
