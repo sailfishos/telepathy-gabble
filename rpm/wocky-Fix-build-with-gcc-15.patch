@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@jolla.com>
+Date: Sat, 4 Oct 2025 16:02:30 +0300
+Subject: [PATCH] Fix build with gcc 15
+
+---
+ wocky/wocky-xmpp-reader.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/wocky/wocky-xmpp-reader.c b/wocky/wocky-xmpp-reader.c
+index f0eaa9212ef497aede10b51ffc2c5fb844b9d060..37a390311a5ec3a9565003690bdab18283412cd3 100644
+--- a/wocky/wocky-xmpp-reader.c
++++ b/wocky/wocky-xmpp-reader.c
+@@ -72,7 +72,7 @@ static void _end_element_ns (void *user_data, const xmlChar *localname,
+ 
+ static void _characters (void *user_data, const xmlChar *ch, int len);
+ 
+-static void _error (void *user_data, xmlErrorPtr error);
++static void _error (void *user_data, const xmlError *error);
+ 
+ static xmlSAXHandler parser_handler = {
+   /* internalSubset         */ NULL,
+@@ -668,7 +668,7 @@ _end_element_ns (void *user_data, const xmlChar *localname,
+ }
+ 
+ static void
+-_error (void *user_data, xmlErrorPtr error)
++_error (void *user_data, const xmlError *error)
+ {
+   WockyXmppReader *self = WOCKY_XMPP_READER (user_data);
+   WockyXmppReaderPrivate *priv = self->priv;

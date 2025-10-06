@@ -14,9 +14,11 @@ Patch6:     0006-Port-tests-to-python3.patch
 Patch7:     0007-Switch-readlink-parameter-from-e-to-f.patch
 Patch8:     0008-Add-make-tests-script.patch
 Patch9:     0009-docs-Ensure-build-reproducibility.patch
+Patch10:    0010-Rename-errno-parameter-to-fix-build-with-gcc-15.patch
 Patch20:    wocky-Make-GTK-Docs-optional.patch
 Patch21:    wocky-fix-mem-leak.patch
 Patch22:    wocky-openssl-1.1-compat.patch
+Patch23:    wocky-Fix-build-with-gcc-15.patch
 BuildRequires:  pkgconfig(dbus-1) >= 1.1.0
 BuildRequires:  pkgconfig(dbus-glib-1) >= 0.82
 BuildRequires:  pkgconfig(telepathy-glib) >= 0.19.9
@@ -66,21 +68,10 @@ The %{name}-tests package contains tests and tests.xml for automated testing.
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
+%autopatch -m 1 -M 19 -p1
 
 cd lib/ext/wocky
-%patch20 -p1
-%patch21 -p1
-# wocky-openssl-1.1-compat.patch  (for openssl compile errors)
-%patch22 -p1
+%autopatch -m 20 -p1
 
 %build
 %autogen --disable-submodules --no-configure
